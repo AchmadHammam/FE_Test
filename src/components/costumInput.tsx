@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HTMLInputTypeAttribute } from "react";
+import { UseFormRegister } from "react-hook-form";
 
 interface CostumInputType {
   type: HTMLInputTypeAttribute;
-  label?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  label: string;
+  register: UseFormRegister<any>;
 }
 
 export const CostumInput: React.FC<CostumInputType> = ({
   type,
   label,
-  onChange,
+  register,
 }) => {
   return (
     <div className="flex w-full flex-col gap-2 py-2">
@@ -18,7 +19,7 @@ export const CostumInput: React.FC<CostumInputType> = ({
       <input
         className="bg-gray-400 p-2 mx-10 border border-gray-800 rounded-md text-black"
         type={type}
-        onChange={onChange}
+        {...register(label?.toLocaleLowerCase())}
       />
     </div>
   );
