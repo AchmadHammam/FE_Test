@@ -3,15 +3,25 @@
 import { CostumButton } from "@/components/costumButton";
 import { CostumInput } from "@/components/costumInput";
 import Image from "next/image";
-import { LoginType } from "../schema/login";
+import { LoginType, LoginValidation } from "../schema/login";
+
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: {},
-  } = useForm<LoginType>();
-  const onSubmit = (data: LoginType) => console.log(data);
+    formState: { errors },
+  } = useForm<LoginType>({ resolver: zodResolver(LoginValidation) });
+
+  const onSubmit = (data: LoginType) => {
+    console.log(data);
+    router.push("/dashboard");
+  };
+
   return (
     <div className="min-h-screen bg-no-repeat bg-cover bg-center">
       <div className="flex justify-between">
@@ -21,8 +31,18 @@ export default function Home() {
         >
           <Image src="/book.svg" width={150} height={150} alt="logo" />
           <div className="w-1/2 items-center ">
-            <CostumInput type="text" label="Username" register={register} />
-            <CostumInput type="text" label="Password" register={register} />
+            <CostumInput
+              type="text"
+              label="Username"
+              register={register}
+              error={errors.username != null ? errors.username.message : ""}
+            />
+            <CostumInput
+              type="password"
+              label="Password"
+              register={register}
+              error={errors.password != null ? errors.password.message : ""}
+            />
             <CostumButton label="Login" width="w-1/4" pos="ml-[67%]" />
           </div>
         </form>
