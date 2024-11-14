@@ -17,8 +17,13 @@ export default function Home() {
     formState: { errors },
   } = useForm<LoginType>({ resolver: zodResolver(LoginValidation) });
 
-  const onSubmit = (data: LoginType) => {
+  const onSubmit = async (data: LoginType) => {
+    // const login = await fetch("http://localhost:8080/api/auth/login", {
+    //   method: "POST",
+    //   body:JSON.stringify(data)
+    // });
     console.log(data);
+
     router.push("/dashboard");
   };
 

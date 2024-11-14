@@ -8,8 +8,6 @@ import { HiOutlinePhoto } from "react-icons/hi2";
 export const SideBar: React.FC = () => {
   const [hide, setHide] = useState<boolean>(true);
   const onClickLaporan = (value: boolean) => {
-    console.log(value);
-
     setHide(!value);
   };
   return (
@@ -39,10 +37,12 @@ export const SideBar: React.FC = () => {
         )}
       </div>
       <div className="py-2">
-        <div className=" flex flex-row gap-2 items-center">
-          <IoSettings size={20} />
-          Master Gerbang
-        </div>
+        <a href="/master-gerbang">
+          <div className=" flex flex-row gap-2 items-center">
+            <IoSettings size={20} />
+            Master Gerbang
+          </div>
+        </a>
       </div>
     </div>
   );

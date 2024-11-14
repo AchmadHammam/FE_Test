@@ -11,8 +11,8 @@ export default function DashboardLayout({
       <TopBar />
       <div className=" flex flex-row bg-gray-300">
         <SideBar />
-        <div className="w-full min-h-max bg-gray-300 my-5 ml-5">
-          <div className="bg-white m-5  min-h-screen p-5">{children}</div>
+        <div className="w-full min-h-[82vh] bg-gray-300 my-5 ml-5">
+          <div className="bg-white m-5  min-h-[82vh] p-5">{children}</div>
         </div>
       </div>
     </body>
