@@ -3,12 +3,18 @@ import { SearchBar } from "@/components/search";
 import { AiTwotoneEdit } from "react-icons/ai";
 import { HiOutlineEye } from "react-icons/hi";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import React, { useState } from "react";
+import { CostumDialog } from "@/components/dialog";
 
 export default function MasterGerbangPage() {
   const [search, setSearch] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+  };
+  const onAddClick = () => {
+    setOpen(!open);
   };
   const data = [
     {
@@ -418,8 +424,19 @@ export default function MasterGerbangPage() {
       <div className="text-xl font-bold">Master Gerbang</div>
       <div className=" flex flex-row justify-between pt-10 w-full">
         <SearchBar onchange={onchange} value={search} />
-        <button>Tambah</button>
+        <button
+          className="bg-gray-500 text-white flex flex-row gap-2 items-center px-3 mr-2 rounded-sm shadow "
+          onClick={onAddClick}
+        >
+          <AiOutlinePlusCircle size={25} />
+          <div>Tambah</div>
+        </button>
       </div>
+      <CostumDialog
+        open={open}
+        title="Tambah Master Gerbang"
+        onClose={onAddClick}
+      />
       <div>
         <table className=" border-collapse mt-5 table-fixed text-center">
           <thead>
