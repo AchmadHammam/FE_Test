@@ -5,16 +5,24 @@ import { HiOutlineEye } from "react-icons/hi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import React, { useState } from "react";
-import { CostumDialog } from "@/components/dialog";
+import { DialogAddGerbang } from "@/components/gerbang/add";
+import { DialogUpdateGerbang } from "@/components/gerbang/update";
 
 export default function MasterGerbangPage() {
   const [search, setSearch] = useState<string>("");
-  const [open, setOpen] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [selectedGerbang, setSelectedGerbang] = useState(0);
+
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
   const onAddClick = () => {
-    setOpen(!open);
+    setOpenAdd(!openAdd);
+  };
+
+  const onUpdateClick = () => {
+    setOpenUpdate(!openUpdate);
   };
   const data = [
     {
@@ -420,37 +428,37 @@ export default function MasterGerbangPage() {
   ];
 
   return (
-    <div className="flex flex-col px-2">
-      <div className="text-xl font-bold">Master Gerbang</div>
-      <div className=" flex flex-row justify-between pt-10 w-full">
+    <div className='flex flex-col '>
+      <div className='text-xl font-bold px-2'>Master Gerbang</div>
+      <div className=' flex flex-row justify-between pt-10 w-full px-2'>
         <SearchBar onchange={onchange} value={search} />
         <button
-          className="bg-gray-500 text-white flex flex-row gap-2 items-center px-3 mr-2 rounded-sm shadow "
+          className='bg-gray-500 text-white flex flex-row gap-2 items-center px-5 mr-2 rounded-sm shadow  '
           onClick={onAddClick}
         >
           <AiOutlinePlusCircle size={25} />
           <div>Tambah</div>
         </button>
       </div>
-      <CostumDialog
-        open={open}
-        title="Tambah Master Gerbang"
+      <DialogAddGerbang
+        open={openAdd}
+        title='Tambah Gerbang'
         onClose={onAddClick}
       />
-      <div>
-        <table className=" border-collapse mt-5 table-fixed text-center">
+      <div className='px-2'>
+        <table className=' border-collapse mt-5 table-fixed text-center'>
           <thead>
             <tr>
-              <th className="w-[3%] bg-gray-300 py-3 shadow shadow-gray-300">
+              <th className='w-[3%] bg-gray-300 py-3 shadow shadow-gray-300'>
                 No
               </th>
-              <th className="w-[20%] bg-gray-300 shadow shadow-gray-300">
+              <th className='w-[20%] bg-gray-300 shadow shadow-gray-300'>
                 Ruas
               </th>
-              <th className="w-[20%] bg-gray-300 shadow shadow-gray-300">
+              <th className='w-[20%] bg-gray-300 shadow shadow-gray-300'>
                 Gerbang
               </th>
-              <th className="w-[5%]  bg-gray-300 px-5 shadow shadow-gray-300">
+              <th className='w-[5%]  bg-gray-300 px-5 shadow shadow-gray-300'>
                 Actions
               </th>
             </tr>
@@ -459,12 +467,15 @@ export default function MasterGerbangPage() {
             {data.map((value, i) => {
               return (
                 <tr key={i}>
-                  <td className="py-[1.5pt]">{i + 1}</td>
+                  <td className='py-[1.5pt]'>{i + 1}</td>
                   <td>{value.ruas}</td>
                   <td>{value.gerbang}</td>
                   <td>
-                    <div className="flex flex-row gap-2 justify-center">
-                      <AiTwotoneEdit />
+                    <div className='flex flex-row gap-2 justify-center'>
+                      <AiTwotoneEdit
+                        onClick={onUpdateClick}
+                        className=' cursor-pointer'
+                      />
                       <HiOutlineEye />
                       <FaRegTrashAlt />
                     </div>
@@ -474,6 +485,11 @@ export default function MasterGerbangPage() {
             })}
           </tbody>
         </table>
+        <DialogUpdateGerbang
+          open={openUpdate}
+          title='Update Gerbang'
+          onClose={onUpdateClick}
+        />
       </div>
     </div>
   );
