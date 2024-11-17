@@ -8,6 +8,7 @@ import { LoginType, LoginValidation } from "../schema/login";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { SaveToken } from "@/controller/token";
 
 export default function Home() {
   const router = useRouter();
@@ -18,13 +19,21 @@ export default function Home() {
   } = useForm<LoginType>({ resolver: zodResolver(LoginValidation) });
 
   const onSubmit = async (data: LoginType) => {
-    // const login = await fetch("http://localhost:8080/api/auth/login", {
-    //   method: "POST",
-    //   body:JSON.stringify(data)
-    // });
-    console.log(data);
-
-    router.push("/dashboard");
+    const res = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(data),
+    });
+    const json: loginResponse = await res.json();
+    const token = json.token;
+    if (token) {
+      const success = await SaveToken(token);
+      if (success) {
+        router.push("/dashboard");
+      }
+    }
   };
 
   return (
@@ -39,11 +48,13 @@ export default function Home() {
             <CostumInput
               type='text'
               label='Username'
+              name='username'
               register={register}
               error={errors.username != null ? errors.username.message : ""}
             />
             <CostumInput
               type='password'
+              name='password'
               label='Password'
               register={register}
               error={errors.password != null ? errors.password.message : ""}

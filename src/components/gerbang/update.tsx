@@ -4,19 +4,23 @@ import { GerbangType, GerbangValidation } from "@/schema/gerbang";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CostumButton } from "../costumButton";
+import { useRouter } from "next/navigation";
 interface DialogUpdateGerbangType {
   open: boolean;
   title: string;
-  onClose: () => void;
+  gerbang: Gerbang | null;
+  onClose: (gerbang: Gerbang | null) => void;
 }
 export const DialogUpdateGerbang: React.FC<DialogUpdateGerbangType> = ({
   open,
   title,
+  gerbang,
   onClose,
 }) => {
+  const router = useRouter();
   const handleOutsideClick = (event: MouseEvent) => {
     if ((event.target! as HTMLElement).id! === "modal-background-update") {
-      onClose();
+      onClose(gerbang);
     }
   };
   useEffect(() => {
@@ -29,30 +33,44 @@ export const DialogUpdateGerbang: React.FC<DialogUpdateGerbangType> = ({
   const {
     register,
     handleSubmit,
-
     formState: { errors },
+    reset,
   } = useForm<GerbangType>({
     resolver: zodResolver(GerbangValidation),
     defaultValues: {
-      gerbang: "Gerbang 1",
-      ruas: "Ruas 1",
+      NamaCabang: "",
+      NamaGerbang: "",
     },
   });
+  useEffect(() => {
+    reset(gerbang!);
+  }, [gerbang, reset]);
 
   if (!open) {
     return null;
   }
 
   const onSubmit = async (data: GerbangType) => {
-    // const login = await fetch("http://localhost:8080/api/auth/login", {
-    //   method: "POST",
-    //   body:JSON.stringify(data)
-    // });
-    console.log(data);
+    console.log("a");
+
+    const res = await fetch("http://localhost:8080/api/gerbangs", {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    });
+    if (res.ok) {
+      onClose(gerbang);
+      router.push("/dashboard");
+    } else {
+      const message = (await res.json()).message;
+      return alert(message);
+    }
   };
 
   const onCancel = () => {
-    onClose();
+    onClose(gerbang);
   };
 
   return (
@@ -64,18 +82,38 @@ export const DialogUpdateGerbang: React.FC<DialogUpdateGerbangType> = ({
         <div className='text-xl font-bold mb-4 text-center'>{title}</div>
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex flex-row'>
+            <div className='flex flex-col'>
+              <CostumInput
+                type='number'
+                label='Id'
+                name='id'
+                register={register}
+                error={errors.id != null ? errors.id.message : ""}
+              />
+              <CostumInput
+                type='number'
+                label='Id Cabang'
+                name='IdCabang'
+                register={register}
+                error={errors.IdCabang != null ? errors.IdCabang.message : ""}
+              />
               <CostumInput
                 type=' text'
-                label='Ruas'
+                label='Nama Cabang'
+                name='NamaCabang'
                 register={register}
-                error={errors.ruas != null ? errors.ruas.message : ""}
+                error={
+                  errors.NamaCabang != null ? errors.NamaCabang.message : ""
+                }
               />
               <CostumInput
                 type='text'
-                label='Gerbang'
+                label='Nama Gerbang'
+                name='NamaGerbang'
                 register={register}
-                error={errors.gerbang != null ? errors.gerbang.message : ""}
+                error={
+                  errors.NamaGerbang != null ? errors.NamaGerbang.message : ""
+                }
               />
             </div>
             <div className='flex flex-row gap-x-10 justify-center'>
