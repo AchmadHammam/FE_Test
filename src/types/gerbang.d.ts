@@ -5,7 +5,7 @@ interface Gerbang {
   NamaCabang: string;
 }
 
-interface Rows {
+interface Gerbangs {
   count: number;
   rows: Gerbang[];
 }
@@ -14,7 +14,7 @@ interface Data {
   total_pages: number;
   current_page: number;
   count: number;
-  rows: Rows;
+  rows: Gerbangs;
 }
 
 interface ModelGerbang {
